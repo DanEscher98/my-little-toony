@@ -1,4 +1,4 @@
---- rainbow-toon: Neovim plugin for TOON file support
+--- my-little-toony: Neovim plugin for TOON file support 🦄✨
 --- Provides syntax highlighting, rainbow column coloring for tabular arrays,
 --- and column alignment formatting.
 ---
@@ -32,16 +32,16 @@ M.config = {
   -- (better for colorscheme compatibility)
   use_highlight_groups = false,
   highlight_groups = {
-    'RainbowColumn1',
-    'RainbowColumn2',
-    'RainbowColumn3',
-    'RainbowColumn4',
-    'RainbowColumn5',
-    'RainbowColumn6',
-    'RainbowColumn7',
-    'RainbowColumn8',
-    'RainbowColumn9',
-    'RainbowColumn10',
+    'ToonyColumn1',
+    'ToonyColumn2',
+    'ToonyColumn3',
+    'ToonyColumn4',
+    'ToonyColumn5',
+    'ToonyColumn6',
+    'ToonyColumn7',
+    'ToonyColumn8',
+    'ToonyColumn9',
+    'ToonyColumn10',
   },
 
   -- Auto-enable rainbow highlighting on TOON files
@@ -76,7 +76,7 @@ function M.setup(opts)
   M.config = vim.tbl_deep_extend('force', M.config, opts)
 
   -- Create namespace for extmarks
-  M.ns_id = vim.api.nvim_create_namespace('rainbow_toon')
+  M.ns_id = vim.api.nvim_create_namespace('my_little_toony')
 
   -- Define highlight groups
   M._define_highlights()
@@ -108,7 +108,7 @@ function M.setup(opts)
   end
 
   -- Set up token counter if configured
-  local token_counter = require('rainbow-toon.token-counter')
+  local token_counter = require('my-little-toony.token-counter')
   token_counter.setup(M.config.token_counter)
 
   if M.config.token_counter.enabled then
@@ -124,7 +124,7 @@ end
 --- Define rainbow column highlight groups
 function M._define_highlights()
   for i, color in ipairs(M.config.colors) do
-    local group_name = 'RainbowColumn' .. i
+    local group_name = 'ToonyColumn' .. i
     vim.api.nvim_set_hl(0, group_name, { fg = color })
   end
 end
@@ -152,46 +152,46 @@ end
 
 --- Create user commands
 function M._create_commands()
-  vim.api.nvim_create_user_command('RainbowToonEnable', function()
+  vim.api.nvim_create_user_command('ToonyEnable', function()
     M.enable()
-  end, { desc = 'Enable rainbow column highlighting for TOON' })
+  end, { desc = '🦄 Enable rainbow column highlighting for TOON' })
 
-  vim.api.nvim_create_user_command('RainbowToonDisable', function()
+  vim.api.nvim_create_user_command('ToonyDisable', function()
     M.disable()
-  end, { desc = 'Disable rainbow column highlighting for TOON' })
+  end, { desc = '🦄 Disable rainbow column highlighting for TOON' })
 
-  vim.api.nvim_create_user_command('RainbowToonToggle', function()
+  vim.api.nvim_create_user_command('ToonyToggle', function()
     M.toggle()
-  end, { desc = 'Toggle rainbow column highlighting for TOON' })
+  end, { desc = '🦄 Toggle rainbow column highlighting for TOON' })
 
-  vim.api.nvim_create_user_command('RainbowToonAlign', function()
+  vim.api.nvim_create_user_command('ToonyAlign', function()
     M.align()
-  end, { desc = 'Align tabular array columns in TOON file' })
+  end, { desc = '🦄 Align tabular array columns in TOON file' })
 
-  vim.api.nvim_create_user_command('RainbowToonShrink', function()
+  vim.api.nvim_create_user_command('ToonyShrink', function()
     M.shrink()
-  end, { desc = 'Remove extra whitespace from tabular arrays' })
+  end, { desc = '🦄 Remove extra whitespace from tabular arrays' })
 
-  vim.api.nvim_create_user_command('RainbowToonTokens', function()
+  vim.api.nvim_create_user_command('ToonyTokens', function()
     M.tokens_enable()
-  end, { desc = 'Enable token counter display' })
+  end, { desc = '🦄 Enable token counter display' })
 
-  vim.api.nvim_create_user_command('RainbowToonTokensOff', function()
+  vim.api.nvim_create_user_command('ToonyTokensOff', function()
     M.tokens_disable()
-  end, { desc = 'Disable token counter display' })
+  end, { desc = '🦄 Disable token counter display' })
 
-  vim.api.nvim_create_user_command('RainbowToonTokensToggle', function()
+  vim.api.nvim_create_user_command('ToonyTokensToggle', function()
     M.tokens_toggle()
-  end, { desc = 'Toggle token counter display' })
+  end, { desc = '🦄 Toggle token counter display' })
 
   -- Register JSON-specific command when opening JSON files
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'json',
     callback = function(args)
-      vim.api.nvim_buf_create_user_command(args.buf, 'RainbowJson2Toon', function(opts)
-        local save = not opts.bang
+      vim.api.nvim_buf_create_user_command(args.buf, 'Json2Toon', function(cmd_opts)
+        local save = not cmd_opts.bang
         M.json_to_toon(save)
-      end, { bang = true, desc = 'Convert JSON buffer to TOON (! to skip auto-save)' })
+      end, { bang = true, desc = '🦄 Convert JSON buffer to TOON (! to skip auto-save)' })
     end,
   })
 end
@@ -268,7 +268,7 @@ function M._apply_rainbow(bufnr)
     return
   end
 
-  local highlights = require('rainbow-toon.highlights')
+  local highlights = require('my-little-toony.highlights')
   highlights.apply_rainbow_to_rows(bufnr, M.ns_id, root, query, M.config)
 end
 
@@ -279,11 +279,11 @@ function M.align(bufnr)
 
   local ok, parser = pcall(vim.treesitter.get_parser, bufnr, 'toon')
   if not ok or not parser then
-    vim.notify('rainbow-toon: No TOON parser available', vim.log.levels.WARN)
+    vim.notify('🦄 my-little-toony: No TOON parser available', vim.log.levels.WARN)
     return
   end
 
-  local align = require('rainbow-toon.align')
+  local align = require('my-little-toony.align')
   align.align_buffer(bufnr, parser)
 
   -- Refresh rainbow highlighting
@@ -295,7 +295,7 @@ end
 --- Convert current JSON buffer to TOON
 ---@param save boolean Whether to auto-save the TOON file
 function M.json_to_toon(save)
-  local json2toon = require('rainbow-toon.json2toon')
+  local json2toon = require('my-little-toony.json2toon')
   json2toon.convert_buffer(save)
 end
 
@@ -306,11 +306,11 @@ function M.shrink(bufnr)
 
   local ok, parser = pcall(vim.treesitter.get_parser, bufnr, 'toon')
   if not ok or not parser then
-    vim.notify('rainbow-toon: No TOON parser available', vim.log.levels.WARN)
+    vim.notify('🦄 my-little-toony: No TOON parser available', vim.log.levels.WARN)
     return
   end
 
-  local align = require('rainbow-toon.align')
+  local align = require('my-little-toony.align')
   align.shrink_buffer(bufnr, parser)
 
   -- Refresh rainbow highlighting
@@ -325,7 +325,7 @@ function M.install_parser()
   -- Find the npm global package location
   local handle = io.popen('npm root -g 2>/dev/null')
   if not handle then
-    vim.notify('rainbow-toon: Could not find npm global root', vim.log.levels.ERROR)
+    vim.notify('🦄 my-little-toony: Could not find npm global root', vim.log.levels.ERROR)
     return
   end
 
@@ -333,7 +333,7 @@ function M.install_parser()
   handle:close()
 
   if not npm_root or npm_root == '' then
-    vim.notify('rainbow-toon: Could not find npm global root', vim.log.levels.ERROR)
+    vim.notify('🦄 my-little-toony: Could not find npm global root', vim.log.levels.ERROR)
     return
   end
 
@@ -343,7 +343,7 @@ function M.install_parser()
   local stat = vim.loop.fs_stat(parser_path)
   if not stat then
     vim.notify(
-      'rainbow-toon: tree-sitter-toon not found. Run: npm install -g @danyiel-colin/tree-sitter-toon',
+      '🦄 my-little-toony: tree-sitter-toon not found. Run: npm install -g @danyiel-colin/tree-sitter-toon',
       vim.log.levels.ERROR
     )
     return
@@ -362,27 +362,27 @@ function M.install_parser()
     filetype = 'toon',
   }
 
-  vim.notify('rainbow-toon: Parser configured from ' .. parser_path, vim.log.levels.INFO)
-  vim.notify('rainbow-toon: Now run :TSInstall toon', vim.log.levels.INFO)
+  vim.notify('🦄 my-little-toony: Parser configured from ' .. parser_path, vim.log.levels.INFO)
+  vim.notify('🦄 my-little-toony: Now run :TSInstall toon', vim.log.levels.INFO)
 end
 
 --- Enable token counter for current buffer
 ---@param bufnr number|nil Buffer number (default: current buffer)
 function M.tokens_enable(bufnr)
-  local token_counter = require('rainbow-toon.token-counter')
+  local token_counter = require('my-little-toony.token-counter')
   token_counter.enable(bufnr)
 end
 
 --- Disable token counter
 function M.tokens_disable()
-  local token_counter = require('rainbow-toon.token-counter')
+  local token_counter = require('my-little-toony.token-counter')
   token_counter.disable()
 end
 
 --- Toggle token counter for current buffer
 ---@param bufnr number|nil Buffer number (default: current buffer)
 function M.tokens_toggle(bufnr)
-  local token_counter = require('rainbow-toon.token-counter')
+  local token_counter = require('my-little-toony.token-counter')
   token_counter.toggle(bufnr)
 end
 

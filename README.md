@@ -1,13 +1,15 @@
-# rainbow-toon
+# My Little Toony 🦄✨
 
 Neovim plugin for [TOON (Token-Oriented Object Notation)](https://github.com/toon-format/spec) with rainbow column highlighting for tabular arrays.
+
+*Friendship is magic, and so is your data!* 🌈
 
 ## Features
 
 - **Syntax highlighting** via [tree-sitter-toon](https://github.com/DanEscher98/tree-sitter-toon)
-- **Rainbow column highlighting** for tabular arrays (10-color cycling palette)
-- **Column alignment** with `:RainbowToonAlign`
-- **JSON to TOON conversion** with `:RainbowJson2Toon`
+- **Rainbow column highlighting** for tabular arrays (10-color cycling palette) 🌈
+- **Column alignment** with `:ToonyAlign`
+- **JSON to TOON conversion** with `:Json2Toon`
 - **Token counter** statusline component showing GPT token count (via [gpt-tokenizer](https://www.npmjs.com/package/gpt-tokenizer))
 - **Filetype detection** for `.toon` files
 - **Editor settings** optimized for TOON (2-space indentation)
@@ -23,10 +25,10 @@ Neovim plugin for [TOON (Token-Oriented Object Notation)](https://github.com/too
 
 ```lua
 {
-  'DanEscher98/rainbow-toon',
+  'DanEscher98/my-little-toony',
   dependencies = { 'nvim-treesitter/nvim-treesitter' },
   config = function()
-    require('rainbow-toon').setup()
+    require('my-little-toony').setup()
   end,
   ft = { 'toon', 'json' },  -- Load on both TOON and JSON files
 }
@@ -36,10 +38,10 @@ Neovim plugin for [TOON (Token-Oriented Object Notation)](https://github.com/too
 
 ```lua
 use {
-  'DanEscher98/rainbow-toon',
+  'DanEscher98/my-little-toony',
   requires = { 'nvim-treesitter/nvim-treesitter' },
   config = function()
-    require('rainbow-toon').setup()
+    require('my-little-toony').setup()
   end,
   ft = { 'toon', 'json' },  -- Load on both TOON and JSON files
 }
@@ -50,8 +52,8 @@ use {
 Clone to your Neovim packages directory:
 
 ```bash
-git clone https://github.com/DanEscher98/rainbow-toon \
-  ~/.local/share/nvim/site/pack/plugins/start/rainbow-toon
+git clone https://github.com/DanEscher98/my-little-toony \
+  ~/.local/share/nvim/site/pack/plugins/start/my-little-toony
 ```
 
 ## Parser Installation
@@ -75,7 +77,7 @@ npm install -g @danyiel-colin/tree-sitter-toon
 Then in Neovim, run:
 
 ```vim
-:lua require('rainbow-toon').install_parser()
+:lua require('my-little-toony').install_parser()
 ```
 
 This will automatically configure and install the parser from the npm package.
@@ -88,21 +90,21 @@ Build from source: [tree-sitter-toon](https://github.com/DanEscher98/tree-sitter
 
 | Command | Description | Filetype |
 |---------|-------------|----------|
-| `:RainbowToonEnable` | Enable rainbow column highlighting | toon |
-| `:RainbowToonDisable` | Disable rainbow column highlighting | toon |
-| `:RainbowToonToggle` | Toggle rainbow column highlighting | toon |
-| `:RainbowToonAlign` | Align tabular array columns | toon |
-| `:RainbowToonShrink` | Remove extra whitespace from columns | toon |
-| `:RainbowToonTokens` | Enable token counter display | toon |
-| `:RainbowToonTokensOff` | Disable token counter display | toon |
-| `:RainbowToonTokensToggle` | Toggle token counter display | toon |
-| `:RainbowJson2Toon` | Convert JSON to TOON (auto-saves) | json |
-| `:RainbowJson2Toon!` | Convert JSON to TOON (no auto-save) | json |
+| `:ToonyEnable` | Enable rainbow column highlighting | toon |
+| `:ToonyDisable` | Disable rainbow column highlighting | toon |
+| `:ToonyToggle` | Toggle rainbow column highlighting | toon |
+| `:ToonyAlign` | Align tabular array columns | toon |
+| `:ToonyShrink` | Remove extra whitespace from columns | toon |
+| `:ToonyTokens` | Enable token counter display | toon |
+| `:ToonyTokensOff` | Disable token counter display | toon |
+| `:ToonyTokensToggle` | Toggle token counter display | toon |
+| `:Json2Toon` | Convert JSON to TOON (auto-saves) | json |
+| `:Json2Toon!` | Convert JSON to TOON (no auto-save) | json |
 
 ## Configuration
 
 ```lua
-require('rainbow-toon').setup({
+require('my-little-toony').setup({
   -- Enable rainbow column highlighting (default: true)
   rainbow_columns = true,
 
@@ -112,7 +114,7 @@ require('rainbow-toon').setup({
   -- Align tabular columns on save (default: false)
   align_on_save = false,
 
-  -- Color palette for rainbow columns
+  -- Color palette for rainbow columns 🌈
   colors = {
     '#E06C75', -- red
     '#98C379', -- green
@@ -130,16 +132,16 @@ require('rainbow-toon').setup({
   -- (better for colorscheme compatibility)
   use_highlight_groups = false,
   highlight_groups = {
-    'RainbowColumn1',
-    'RainbowColumn2',
-    'RainbowColumn3',
-    'RainbowColumn4',
-    'RainbowColumn5',
-    'RainbowColumn6',
-    'RainbowColumn7',
-    'RainbowColumn8',
-    'RainbowColumn9',
-    'RainbowColumn10',
+    'ToonyColumn1',
+    'ToonyColumn2',
+    'ToonyColumn3',
+    'ToonyColumn4',
+    'ToonyColumn5',
+    'ToonyColumn6',
+    'ToonyColumn7',
+    'ToonyColumn8',
+    'ToonyColumn9',
+    'ToonyColumn10',
   },
 
   -- Token counter configuration (statusline component)
@@ -163,9 +165,9 @@ users[3]{id,name,role,active}:
   3,Charlie,designer,false
 ```
 
-With rainbow highlighting, each column (`id`, `name`, `role`, `active`) gets a distinct color.
+With rainbow highlighting, each column (`id`, `name`, `role`, `active`) gets a distinct color. 🌈
 
-Use `:RainbowToonAlign` to align columns:
+Use `:ToonyAlign` to align columns:
 
 ```toon
 users[3]{id,name,role,active}:
@@ -176,7 +178,7 @@ users[3]{id,name,role,active}:
 
 ## JSON to TOON Conversion
 
-Open a JSON file and run `:RainbowJson2Toon` to convert it to TOON format:
+Open a JSON file and run `:Json2Toon` to convert it to TOON format:
 
 **Input (users.json):**
 ```json
@@ -216,14 +218,14 @@ npm install -g gpt-tokenizer
 2. Enable the token counter:
 
 ```lua
-require('rainbow-toon').setup({
+require('my-little-toony').setup({
   token_counter = {
     enabled = true,  -- Auto-enable on TOON files
   },
 })
 ```
 
-Or enable it manually with `:RainbowToonTokens`.
+Or enable it manually with `:ToonyTokens`.
 
 3. Add to your statusline. The module provides a `statusline()` function:
 
@@ -232,7 +234,7 @@ Or enable it manually with `:RainbowToonTokens`.
 require('lualine').setup({
   sections = {
     lualine_x = {
-      { require('rainbow-toon.token-counter').statusline },
+      { require('my-little-toony.token-counter').statusline },
       'encoding', 'fileformat', 'filetype'
     },
   },
@@ -241,7 +243,7 @@ require('lualine').setup({
 
 **Native statusline:**
 ```lua
-vim.o.statusline = '%f %m%=%{v:lua.require("rainbow-toon.token-counter").statusline()} %l:%c'
+vim.o.statusline = '%f %m%=%{v:lua.require("my-little-toony.token-counter").statusline()} %l:%c'
 ```
 
 **NvChad:**
@@ -253,11 +255,11 @@ M.ui = {
     order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "toon_tokens", "diagnostics", "lsp", "cwd", "cursor" },
     modules = {
       toon_tokens = function()
-        local ok, token_counter = pcall(require, "rainbow-toon.token-counter")
+        local ok, token_counter = pcall(require, "my-little-toony.token-counter")
         if ok then
           local count = token_counter.statusline()
           if count and count ~= "" then
-            return "%#St_LspHints#" .. " " .. count .. " "
+            return "%#St_LspHints#" .. "🦄 " .. count .. " "
           end
         end
         return ""

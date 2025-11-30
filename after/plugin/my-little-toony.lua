@@ -1,4 +1,4 @@
--- Post-load initialization for rainbow-toon
+-- Post-load initialization for my-little-toony 🦄
 -- This file runs after all plugins are loaded
 
 -- Only initialize if nvim-treesitter is available

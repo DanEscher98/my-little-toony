@@ -1,4 +1,4 @@
---- Token counter module for rainbow-toon
+--- Token counter module for my-little-toony 🦄
 --- Provides a statusline component showing GPT token count
 --- Uses gpt-tokenizer (npm package) for accurate GPT token counting
 
@@ -193,7 +193,7 @@ function M.enable(bufnr)
   -- Check dependencies
   if not check_gpt_tokenizer() then
     vim.schedule(function()
-      vim.notify('rainbow-toon: gpt-tokenizer not found. Run: npm install -g gpt-tokenizer', vim.log.levels.WARN)
+      vim.notify('🦄 my-little-toony: gpt-tokenizer not found. Run: npm install -g gpt-tokenizer', vim.log.levels.WARN)
     end)
     return
   end
@@ -211,7 +211,7 @@ function M.enable(bufnr)
   count_tokens_async(bufnr)
 
   -- Set up autocmds for this buffer
-  local augroup = vim.api.nvim_create_augroup('RainbowToonTokenCounter_' .. bufnr, { clear = true })
+  local augroup = vim.api.nvim_create_augroup('ToonyTokenCounter_' .. bufnr, { clear = true })
 
   vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
     group = augroup,
@@ -241,7 +241,7 @@ function M.disable(bufnr)
 
   -- Clear autocmds for this buffer
   pcall(function()
-    vim.api.nvim_del_augroup_by_name('RainbowToonTokenCounter_' .. bufnr)
+    vim.api.nvim_del_augroup_by_name('ToonyTokenCounter_' .. bufnr)
   end)
 
   -- Check if any buffers still have token counting enabled
