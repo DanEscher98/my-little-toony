@@ -143,6 +143,10 @@ function M._create_commands()
     M.align()
   end, { desc = 'Align tabular array columns in TOON file' })
 
+  vim.api.nvim_create_user_command('RainbowToonShrink', function()
+    M.shrink()
+  end, { desc = 'Remove extra whitespace from tabular arrays' })
+
   -- Register JSON-specific command when opening JSON files
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'json',
@@ -256,6 +260,26 @@ end
 function M.json_to_toon(save)
   local json2toon = require('rainbow-toon.json2toon')
   json2toon.convert_buffer(save)
+end
+
+--- Shrink tabular array columns (remove extra whitespace)
+---@param bufnr number|nil Buffer number (default: current buffer)
+function M.shrink(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+  local ok, parser = pcall(vim.treesitter.get_parser, bufnr, 'toon')
+  if not ok or not parser then
+    vim.notify('rainbow-toon: No TOON parser available', vim.log.levels.WARN)
+    return
+  end
+
+  local align = require('rainbow-toon.align')
+  align.shrink_buffer(bufnr, parser)
+
+  -- Refresh rainbow highlighting
+  if M.enabled_buffers[bufnr] then
+    M._apply_rainbow(bufnr)
+  end
 end
 
 return M

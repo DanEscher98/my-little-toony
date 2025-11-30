@@ -51,7 +51,8 @@ function M.apply_rainbow_to_rows(bufnr, ns_id, root, query, config)
       local values = parse_row_values(bufnr, node)
 
       for col_idx, value in ipairs(values) do
-        local color_idx = ((col_idx - 1) % num_colors) + 1
+        -- Start from color 2 to avoid matching the key color (which is typically color 1/red)
+        local color_idx = (col_idx % num_colors) + 1
         local hl_group = config.use_highlight_groups
             and config.highlight_groups[color_idx]
             or ('RainbowColumn' .. color_idx)

@@ -179,7 +179,8 @@ end
 --- Align all tabular arrays in a buffer
 ---@param bufnr number Buffer number
 ---@param parser any Tree-sitter parser
-function M.align_buffer(bufnr, parser)
+---@param silent boolean|nil Suppress notifications
+function M.align_buffer(bufnr, parser, silent)
   local regions = find_tabular_regions(bufnr, parser)
 
   -- Process regions in reverse order to avoid line number shifts
@@ -187,17 +188,28 @@ function M.align_buffer(bufnr, parser)
     return a.array_start > b.array_start
   end)
 
+  local total_rows = 0
+  local total_regions = 0
+
   for _, region in ipairs(regions) do
     if #region.rows > 0 then
-      M.align_region(bufnr, region)
+      local rows_aligned = M.align_region(bufnr, region, true)
+      total_rows = total_rows + rows_aligned
+      total_regions = total_regions + 1
     end
+  end
+
+  if not silent and total_regions > 0 then
+    vim.notify(string.format('Aligned %d rows in %d tables', total_rows, total_regions), vim.log.levels.INFO)
   end
 end
 
 --- Align a single tabular region
 ---@param bufnr number Buffer number
 ---@param region table Region info
-function M.align_region(bufnr, region)
+---@param silent boolean|nil Suppress notifications
+---@return number Number of rows aligned
+function M.align_region(bufnr, region, silent)
   -- Get all row lines
   local lines = {}
   local line_numbers = {}
@@ -217,7 +229,7 @@ function M.align_region(bufnr, region)
   end
 
   if #lines == 0 then
-    return
+    return 0
   end
 
   local delimiter = region.delimiter or detect_delimiter(lines[1])
@@ -252,7 +264,99 @@ function M.align_region(bufnr, region)
     end
   end
 
-  vim.notify(string.format('Aligned %d rows', #aligned_lines), vim.log.levels.INFO)
+  if not silent then
+    vim.notify(string.format('Aligned %d rows', #aligned_lines), vim.log.levels.INFO)
+  end
+
+  return #aligned_lines
+end
+
+--- Shrink all tabular arrays in a buffer (remove extra whitespace)
+---@param bufnr number Buffer number
+---@param parser any Tree-sitter parser
+---@param silent boolean|nil Suppress notifications
+function M.shrink_buffer(bufnr, parser, silent)
+  local regions = find_tabular_regions(bufnr, parser)
+
+  -- Process regions in reverse order to avoid line number shifts
+  table.sort(regions, function(a, b)
+    return a.array_start > b.array_start
+  end)
+
+  local total_rows = 0
+  local total_regions = 0
+
+  for _, region in ipairs(regions) do
+    if #region.rows > 0 then
+      local rows_shrunk = M.shrink_region(bufnr, region, true)
+      total_rows = total_rows + rows_shrunk
+      total_regions = total_regions + 1
+    end
+  end
+
+  if not silent and total_regions > 0 then
+    vim.notify(string.format('Shrunk %d rows in %d tables', total_rows, total_regions), vim.log.levels.INFO)
+  end
+end
+
+--- Shrink a single tabular region (remove extra whitespace)
+---@param bufnr number Buffer number
+---@param region table Region info
+---@param silent boolean|nil Suppress notifications
+---@return number Number of rows shrunk
+function M.shrink_region(bufnr, region, silent)
+  -- Get all row lines
+  local lines = {}
+  local line_numbers = {}
+
+  -- Collect consecutive tabular rows
+  local start_line = region.rows[1]
+  local lines_content = vim.api.nvim_buf_get_lines(bufnr, start_line, region.array_end, false)
+
+  -- Filter to only tabular rows (lines with delimiters, not starting with -)
+  for i, line in ipairs(lines_content) do
+    local trimmed = trim(line)
+    if trimmed ~= '' and not trimmed:match('^%-') and
+        (trimmed:match(',') or trimmed:match('|') or trimmed:match('\t')) then
+      table.insert(lines, line)
+      table.insert(line_numbers, start_line + i - 1)
+    end
+  end
+
+  if #lines == 0 then
+    return 0
+  end
+
+  local delimiter = region.delimiter or detect_delimiter(lines[1])
+
+  -- Generate shrunk lines (no padding, just trimmed values)
+  local shrunk_lines = {}
+  for i, line in ipairs(lines) do
+    local values = split_respecting_quotes(line, delimiter)
+    local trimmed_values = {}
+
+    for _, value in ipairs(values) do
+      table.insert(trimmed_values, trim(value))
+    end
+
+    -- Preserve leading indentation
+    local indent = line:match('^(%s*)')
+    local sep = delimiter == '\t' and '\t' or delimiter
+    shrunk_lines[i] = indent .. table.concat(trimmed_values, sep)
+  end
+
+  -- Apply changes
+  for i, line_num in ipairs(line_numbers) do
+    if shrunk_lines[i] then
+      vim.api.nvim_buf_set_lines(bufnr, line_num, line_num + 1, false, { shrunk_lines[i] })
+    end
+  end
+
+  if not silent then
+    vim.notify(string.format('Shrunk %d rows', #shrunk_lines), vim.log.levels.INFO)
+  end
+
+  return #shrunk_lines
 end
 
 return M
