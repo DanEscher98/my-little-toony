@@ -1,4 +1,4 @@
---- Rainbow column highlighting for tabular arrays
+--- Toony column highlighting for tabular arrays 🦄
 --- Applies alternating colors to values in tabular rows
 
 local M = {}
@@ -55,7 +55,7 @@ function M.apply_rainbow_to_rows(bufnr, ns_id, root, query, config)
         local color_idx = (col_idx % num_colors) + 1
         local hl_group = config.use_highlight_groups
             and config.highlight_groups[color_idx]
-            or ('RainbowColumn' .. color_idx)
+            or ('ToonyColumn' .. color_idx)
 
         -- Apply highlight using extmark
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, value.start_row, value.start_col, {
