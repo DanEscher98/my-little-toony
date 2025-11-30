@@ -46,6 +46,9 @@ M.config = {
 
   -- Auto-enable rainbow highlighting on TOON files
   auto_enable = true,
+
+  -- Align tabular columns on save
+  align_on_save = false,
 }
 
 --- Track enabled state per buffer
@@ -78,6 +81,16 @@ function M.setup(opts)
       pattern = 'toon',
       callback = function(args)
         M.enable(args.buf)
+      end,
+    })
+  end
+
+  -- Align on save if configured
+  if M.config.align_on_save then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      pattern = '*.toon',
+      callback = function(args)
+        M.align(args.buf)
       end,
     })
   end
@@ -129,6 +142,11 @@ function M._create_commands()
   vim.api.nvim_create_user_command('RainbowToonAlign', function()
     M.align()
   end, { desc = 'Align tabular array columns in TOON file' })
+
+  vim.api.nvim_create_user_command('RainbowJson2Toon', function(opts)
+    local save = not opts.bang  -- :RainbowJson2Toon saves, :RainbowJson2Toon! doesn't
+    M.json_to_toon(save)
+  end, { bang = true, desc = 'Convert JSON buffer to TOON (! to skip auto-save)' })
 end
 
 --- Enable rainbow highlighting for a buffer
@@ -225,6 +243,13 @@ function M.align(bufnr)
   if M.enabled_buffers[bufnr] then
     M._apply_rainbow(bufnr)
   end
+end
+
+--- Convert current JSON buffer to TOON
+---@param save boolean Whether to auto-save the TOON file
+function M.json_to_toon(save)
+  local json2toon = require('rainbow-toon.json2toon')
+  json2toon.convert_buffer(save)
 end
 
 return M
