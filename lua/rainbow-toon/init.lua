@@ -50,22 +50,16 @@ M.config = {
   -- Align tabular columns on save
   align_on_save = false,
 
-  -- Token counter configuration
+  -- Token counter configuration (statusline component)
   token_counter = {
-    -- Enable token counter display (requires: npm install -g gpt-tokenizer)
+    -- Enable token counter on TOON files (requires: npm install -g gpt-tokenizer)
     enabled = false,
     -- Debounce delay in ms before recounting tokens
     debounce_ms = 500,
-    -- Window transparency (0=opaque, 100=fully transparent)
-    winblend = 30,
-    -- Border style: "none", "single", "double", "rounded", "solid", "shadow"
-    border = 'rounded',
-    -- Highlight group for the token count text
-    highlight = 'Comment',
-    -- Highlight group for the window border
-    border_highlight = 'FloatBorder',
-    -- Format string for display (%d = token count)
-    format = ' %d tokens ',
+    -- Format string for statusline (%d = token count)
+    format = '%d tokens',
+    -- Format when counting is in progress
+    counting_format = '... tokens',
   },
 }
 

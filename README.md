@@ -8,7 +8,7 @@ Neovim plugin for [TOON (Token-Oriented Object Notation)](https://github.com/too
 - **Rainbow column highlighting** for tabular arrays (10-color cycling palette)
 - **Column alignment** with `:RainbowToonAlign`
 - **JSON to TOON conversion** with `:RainbowJson2Toon`
-- **Token counter** floating window showing GPT token count (via [gpt-tokenizer](https://www.npmjs.com/package/gpt-tokenizer))
+- **Token counter** statusline component showing GPT token count (via [gpt-tokenizer](https://www.npmjs.com/package/gpt-tokenizer))
 - **Filetype detection** for `.toon` files
 - **Editor settings** optimized for TOON (2-space indentation)
 
@@ -142,14 +142,12 @@ require('rainbow-toon').setup({
     'RainbowColumn10',
   },
 
-  -- Token counter configuration
+  -- Token counter configuration (statusline component)
   token_counter = {
-    enabled = false,        -- Auto-enable on TOON files
-    debounce_ms = 500,      -- Delay before recounting
-    winblend = 30,          -- Window transparency (0-100)
-    border = 'rounded',     -- Border style
-    highlight = 'Comment',  -- Text highlight group
-    format = ' %d tokens ', -- Display format
+    enabled = false,           -- Auto-enable on TOON files
+    debounce_ms = 500,         -- Delay before recounting
+    format = '%d tokens',      -- Statusline format
+    counting_format = '...',   -- Shown while counting
   },
 })
 ```
@@ -205,17 +203,17 @@ The converter automatically:
 
 ## Token Counter
 
-Display a floating window in the bottom-right corner showing the GPT token count of your TOON file. This is useful for staying within context limits when preparing data for LLMs.
+Show GPT token count in your statusline. Useful for staying within context limits when preparing data for LLMs.
 
 ### Setup
 
-Install the tokenizer package:
+1. Install the tokenizer package:
 
 ```bash
 npm install -g gpt-tokenizer
 ```
 
-Enable the token counter in your config:
+2. Enable the token counter:
 
 ```lua
 require('rainbow-toon').setup({
@@ -226,6 +224,25 @@ require('rainbow-toon').setup({
 ```
 
 Or enable it manually with `:RainbowToonTokens`.
+
+3. Add to your statusline. The module provides a `statusline()` function:
+
+**lualine.nvim:**
+```lua
+require('lualine').setup({
+  sections = {
+    lualine_x = {
+      { require('rainbow-toon.token-counter').statusline },
+      'encoding', 'fileformat', 'filetype'
+    },
+  },
+})
+```
+
+**Native statusline:**
+```lua
+vim.o.statusline = '%f %m%=%{v:lua.require("rainbow-toon.token-counter").statusline()} %l:%c'
+```
 
 The counter updates automatically as you edit, with debouncing to avoid performance issues.
 
