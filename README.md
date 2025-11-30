@@ -2,8 +2,6 @@
 
 Neovim plugin for [TOON (Token-Oriented Object Notation)](https://github.com/toon-format/spec) with rainbow column highlighting for tabular arrays.
 
-*Friendship is magic, and so is your data!* 🌈
-
 ## Features
 
 - **Syntax highlighting** via [tree-sitter-toon](https://github.com/DanEscher98/tree-sitter-toon)
